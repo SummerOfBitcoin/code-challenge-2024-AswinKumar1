@@ -115,9 +115,9 @@ def create_block_header(merkle_root, timestamp, previous_block_hash, nonce):
         "version": "04000000",  
         "previous_block_hash": previous_block_hash,
         "merkle_root": merkle_root,
-        "timestamp": timestamp,
+        "timestamp": str(timestamp),
         "bits": "ffff0000",  
-        "nonce": nonce
+        "nonce": str(nonce)
     }
 
 # Function to calculate the merkle root
