@@ -100,14 +100,23 @@ def serialize_transaction(transaction):
 
 # Function to serialize the block header
 def serialize_block_header(block_header):
-    return json.dumps(block_header, separators=(',', ':'))
+    serialized_header = ""
+    serialized_header += str(block_header["version"])
+    serialized_header += str(block_header["previous_block_hash"])
+    serialized_header += str(block_header["merkle_root"])
+    serialized_header += str(block_header["timestamp"])
+    serialized_header += str(block_header["bits"])
+    serialized_header += str(block_header["nonce"])
+    return serialized_header
 
 # Function to create a block header
 def create_block_header(merkle_root, timestamp, previous_block_hash, nonce):
     return {
+        "version": "04000000",  
         "previous_block_hash": previous_block_hash,
         "merkle_root": merkle_root,
         "timestamp": timestamp,
+        "bits": "ffff0000",  
         "nonce": nonce
     }
 
