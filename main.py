@@ -220,7 +220,7 @@ def main():
         # Remove the coinbase transaction from the list of transactions
         block_transactions = [tx for tx in valid_transactions if not tx.get('is_coinbase')]
 
-        previous_block_hash = "0000000000000000000000000000000000000000000000000000000000000000"  # Initialize previous_block_hash
+        previous_block_hash = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"  # Initialize previous_block_hash
         
         # Calculate txids for block transactions
         txids = []
