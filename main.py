@@ -101,12 +101,12 @@ def serialize_transaction(transaction):
 # Function to serialize the block header
 def serialize_block_header(block_header):
     serialized_header = ""
-    serialized_header += str(block_header["version"])
-    serialized_header += str(block_header["previous_block_hash"])
-    serialized_header += str(block_header["merkle_root"])
-    serialized_header += str(block_header["timestamp"])
-    serialized_header += str(block_header["bits"])
-    serialized_header += str(block_header["nonce"])
+    serialized_header += "04000000"  
+    serialized_header += block_header["previous_block_hash"][::-1]  
+    serialized_header += block_header["merkle_root"]
+    serialized_header += "{:08x}".format(block_header["timestamp"])  
+    serialized_header += block_header["bits"]      
+    serialized_header += "{:08x}".format(block_header["nonce"])      
     return serialized_header
 
 # Function to create a block header
@@ -115,9 +115,9 @@ def create_block_header(merkle_root, timestamp, previous_block_hash, nonce):
         "version": "04000000",  
         "previous_block_hash": previous_block_hash,
         "merkle_root": merkle_root,
-        "timestamp": str(timestamp),
-        "bits": "ffff0000",  
-        "nonce": str(nonce)
+        "timestamp": timestamp,
+        "bits": "ffff0000", 
+        "nonce": nonce
     }
 
 # Function to calculate the merkle root
@@ -170,35 +170,6 @@ def write_output(block_header, coinbase_tx, txids, block_hash):
             f.write(txid + '\n')
 
 # Main function
-'''def main():
-    valid_transactions, invalid_transactions = load_transactions()
-    try:
-        if not valid_transactions:
-            print("No valid transactions to mine.")
-            return
-        coinbase_tx = valid_transactions[0]  # Assuming the first transaction is the coinbase transaction
-        previous_block_hash = "0000000000000000000000000000000000000000000000000000000000000000"  # Initialize previous_block_hash
-        block_transactions = valid_transactions[:]  # Make a copy of valid_transactions for this block
-        block_transactions.pop(0)  # Remove coinbase transaction from block transactions
-        
-        # Calculate txids for block transactions
-        txids = []
-        for tx in block_transactions:
-            txid = tx.get('txid')
-            if txid is None:
-                # Calculate txid if it's missing
-                serialized_tx = serialize_transaction(tx)
-                if not all(c in string.hexdigits for c in serialized_tx):
-                    print(f"Transaction serialization error: {serialized_tx}")
-                    continue  # Skip invalid transaction
-                txid = double_sha256(bytes.fromhex(serialized_tx))[::-1].hex()
-            txids.append(txid)
-        
-        block_header, nonce, block_hash = mine_block(block_transactions, previous_block_hash)
-        write_output(block_header, coinbase_tx, txids, block_hash)
-    except Exception as e:
-            print(e)
-'''
 def main():
     valid_transactions, invalid_transactions = load_transactions()
     try:
@@ -208,19 +179,11 @@ def main():
         
         # Find the coinbase transaction
         coinbase_tx = valid_transactions[0]
-        '''
-        for tx in valid_transactions:
-            if 'is_coinbase' in tx and tx['is_coinbase']:
-                coinbase_tx = tx
-                break
         
-            if coinbase_tx is None:
-               print("Coinbase transaction not found.")
-'''
         # Remove the coinbase transaction from the list of transactions
         block_transactions = [tx for tx in valid_transactions if not tx.get('is_coinbase')]
 
-        previous_block_hash = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"  # Initialize previous_block_hash
+        previous_block_hash = "00000000000000000000000000000000ffffffffffffffffffffffffffffffff"  # Initialize previous_block_hash
         
         # Calculate txids for block transactions
         txids = []
