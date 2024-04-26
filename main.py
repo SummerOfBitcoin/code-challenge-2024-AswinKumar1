@@ -116,7 +116,7 @@ def create_block_header(merkle_root, timestamp, previous_block_hash, nonce):
         "previous_block_hash": previous_block_hash,
         "merkle_root": merkle_root,
         "timestamp": timestamp,
-        "bits": "ffff0000", 
+        "bits": "ffff001f", 
         "nonce": nonce
     }
 
